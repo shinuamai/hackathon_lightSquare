@@ -179,7 +179,7 @@ export default function Play() {
   const roundResultsRef= useRef(roundResults);roundResultsRef.current= roundResults
   const roundEndedRef  = useRef(false)        // prevent double-fire
   const floatIdRef     = useRef(0)
-  const anyTypingRef   = useRef(false)        // ANY input focused → block all game keys
+  // anyTypingRef eliminado — se usa e.target directamente en el handler
 
   // ── Audio sync ──
   useEffect(() => { audio.setMuted(muted) },  [muted])
@@ -316,8 +316,8 @@ export default function Play() {
   // ── Keyboard (stable: uses refs, fires once) ─────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      // Bloquear TODOS los poderes si cualquier input tiene foco
-      if (anyTypingRef.current) return
+      // Bloquear poderes si el foco está en cualquier input de texto
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
       if (phaseRef.current !== 'fighting' || isPausedRef.current) return
       const k  = e.key.toLowerCase()
       const i1 = P1_KEYS.indexOf(k)
@@ -447,8 +447,6 @@ export default function Play() {
                 </label>
                 <input type="text" value={p1Name}
                   onChange={e => setP1Name(e.target.value || 'Jugador 1')}
-                  onFocus={() => { anyTypingRef.current = true }}
-                  onBlur ={() => { anyTypingRef.current = false }}
                   placeholder="Jugador 1" maxLength={20}
                   className="w-full px-4 py-3 bg-black/40 border border-purple-500/40 rounded-xl
                     focus:outline-none focus:ring-2 focus:ring-purple-500 text-white text-lg font-bold" />
@@ -459,8 +457,6 @@ export default function Play() {
                 </label>
                 <input type="text" value={p2Name}
                   onChange={e => setP2Name(e.target.value || 'Jugador 2')}
-                  onFocus={() => { anyTypingRef.current = true }}
-                  onBlur ={() => { anyTypingRef.current = false }}
                   placeholder="Jugador 2" maxLength={20}
                   className="w-full px-4 py-3 bg-black/40 border border-red-500/40 rounded-xl
                     focus:outline-none focus:ring-2 focus:ring-red-500 text-white text-lg font-bold" />
@@ -666,8 +662,6 @@ export default function Play() {
                 <input type="text" value={p1Input}
                   onChange={e => setP1Input(e.target.value)}
                   onKeyDown={e => e.key==='Enter' && addP1Power()}
-                  onFocus={() => { anyTypingRef.current = true }}
-                  onBlur ={() => { anyTypingRef.current = false }}
                   placeholder={p1Loading ? '⚙ Forjando...' : `✦ Poder de ${p1Name} [T]`}
                   disabled={p1Loading}
                   className="flex-1 px-2 py-2 bg-black/40 border border-purple-500/30 rounded-lg text-xs
@@ -726,8 +720,6 @@ export default function Play() {
                 <input type="text" value={p2Input}
                   onChange={e => setP2Input(e.target.value)}
                   onKeyDown={e => e.key==='Enter' && addP2Power()}
-                  onFocus={() => { anyTypingRef.current = true }}
-                  onBlur ={() => { anyTypingRef.current = false }}
                   placeholder={p2Loading ? '⚙ Forjando...' : `✦ Poder de ${p2Name} [Y]`}
                   disabled={p2Loading}
                   className="flex-1 px-2 py-2 bg-black/40 border border-red-500/30 rounded-lg text-xs text-right
