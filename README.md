@@ -1,150 +1,215 @@
-# 🎮 Introducción a la Creación de Videojuegos
+# ⚡ lightSquare
 
-Bienvenido a esta guía introductoria sobre el desarrollo de videojuegos. Este documento te proporcionará los conceptos fundamentales para comenzar tu viaje como desarrollador de juegos.
+> **Combate táctico de invocaciones potenciado por Gemini AI**
 
-## 📋 Índice
-
-- [Conceptos Básicos](#conceptos-básicos)
-- [Herramientas y Motores de Juego](#herramientas-y-motores-de-juego)
-- [El Ciclo de Desarrollo](#el-ciclo-de-desarrollo)
-- [Lenguajes de Programación](#lenguajes-de-programación)
-- [Próximos Pasos](#próximos-pasos)
-
-## 🎯 Conceptos Básicos
-
-### ¿Qué es un Videojuego?
-Un videojuego es un programa interactivo que combina:
-- **Gráficos**: Visualización de elementos en pantalla
-- **Audio**: Música y efectos de sonido
-- **Mecánicas**: Reglas y sistemas de juego
-- **Narrativa**: Historia y contexto (opcional)
-- **Interactividad**: Respuesta a las acciones del jugador
-
-### Elementos Fundamentales
-
-1. **Game Loop (Bucle de Juego)**
-   - El corazón de cualquier videojuego
-   - Se ejecuta continuamente mientras el juego está activo
-   - Procesa: Entrada → Actualización → Renderizado
-
-2. **Entidades y Objetos**
-   - Personajes, enemigos, obstáculos, items
-   - Cada entidad tiene propiedades (posición, velocidad, estado)
-
-3. **Física y Colisiones**
-   - Simulación de movimiento y gravedad
-   - Detección de colisiones entre objetos
-
-4. **Estado del Juego**
-   - Menú principal, jugando, pausa, game over
-   - Gestión de transiciones entre estados
-
-## 🛠️ Herramientas y Motores de Juego
-
-### Motores de Juego Populares
-
-| Motor | Lenguaje | Dificultad | Ideal para |
-|-------|----------|------------|------------|
-| **Unity** | C# | Media | 2D/3D, multiplataforma |
-| **Unreal Engine** | C++/Blueprints | Alta | AAA, gráficos avanzados |
-| **Godot** | GDScript/C# | Baja/Media | 2D/3D, open source |
-| **GameMaker** | GML | Baja | 2D, principiantes |
-| **Construct** | Visual | Muy baja | 2D, sin código |
-
-### Herramientas Adicionales
-
-- **Aseprite / Piskel**: Creación de pixel art
-- **Blender**: Modelado 3D y animación
-- **Audacity**: Edición de audio
-- **Tiled**: Creación de tilemaps 2D
-- **Git**: Control de versiones
-
-## 🔄 El Ciclo de Desarrollo
-
-### 1. Conceptualización
-- Definir la idea central del juego
-- Establecer el género y estilo
-- Documentar mecánicas y objetivos
-
-### 2. Prototipado
-- Crear una versión básica jugable
-- Probar mecánicas principales
-- Validar la idea
-
-### 3. Desarrollo
-- Implementar características completas
-- Crear assets (gráficos, audio)
-- Programar sistemas complejos
-
-### 4. Testing
-- Identificar y corregir bugs
-- Balancear dificultad
-- Optimizar rendimiento
-
-### 5. Lanzamiento
-- Preparar builds para diferentes plataformas
-- Marketing y distribución
-- Soporte post-lanzamiento
-
-## 💻 Lenguajes de Programación
-
-### Para Desarrollo de Juegos
-
-- **C#**: Utilizado en Unity, balance entre potencia y facilidad
-- **C++**: Utilizado en Unreal, máximo rendimiento y control
-- **GDScript**: Lenguaje de Godot, similar a Python, fácil de aprender
-- **JavaScript/TypeScript**: Para juegos web (Phaser, Three.js)
-- **Python**: Con Pygame, ideal para aprender conceptos básicos
-
-### Ejemplo de Game Loop (Pseudocódigo)
-
-```python
-while juego_activo:
-    # 1. Procesar entrada del jugador
-    entrada = obtener_entrada()
-    
-    # 2. Actualizar estado del juego
-    actualizar_entidades(entrada)
-    verificar_colisiones()
-    
-    # 3. Renderizar gráficos
-    dibujar_pantalla()
-    
-    # 4. Controlar velocidad (FPS)
-    esperar(frame_time)
-```
-
-## 🚀 Próximos Pasos
-
-### Para Principiantes
-
-1. **Elige un motor**: Recomendamos Godot o Unity para empezar
-2. **Aprende lo básico**: Tutorial oficial del motor elegido
-3. **Clona un juego simple**: Pong, Snake, o Tetris
-4. **Experimenta**: Modifica y agrega características
-5. **Crea tu propio proyecto**: Empieza pequeño
-
-### Recursos de Aprendizaje
-
-- **YouTube**: Canales como Brackeys, Heartbeast, GDQuest
-- **Documentación oficial**: Siempre la mejor fuente
-- **Comunidades**: Discord, Reddit, foros especializados
-- **Game Jams**: Participa para practicar y aprender
-
-## 📝 Consejos Importantes
-
-- **Empieza pequeño**: Tu primer juego no debe ser un MMORPG
-- **Termina tus proyectos**: Es mejor un juego pequeño terminado que uno grande abandonado
-- **Aprende haciendo**: La teoría es importante, pero la práctica es esencial
-- **No tengas miedo de cometer errores**: Es parte del proceso de aprendizaje
-- **Únete a la comunidad**: Conectar con otros desarrolladores es invaluable
-
-## 🎓 Conclusión
-
-El desarrollo de videojuegos es un campo creativo y técnico que combina programación, arte y diseño. Requiere paciencia, práctica y pasión, pero es extremadamente gratificante ver tus ideas cobrar vida.
-
-¡Buena suerte en tu viaje como desarrollador de videojuegos!
+Escribe la descripción de tu arma o hechizo, la IA lo interpreta, le asigna estadísticas de combate y tu criatura se enfrenta a un enemigo en una batalla por elementos. 5 rondas. Un ganador.
 
 ---
 
-**Última actualización**: Junio 2026
+## 📋 Índice
+
+- [Demo](#-demo)
+- [Cómo se juega](#-cómo-se-juega)
+- [Sistema de combate](#-sistema-de-combate)
+- [Elementos y ventajas](#-elementos-y-ventajas)
+- [Sistema de puntuación](#-sistema-de-puntuación)
+- [Stack tecnológico](#-stack-tecnológico)
+- [Instalación](#-instalación)
+- [Variables de entorno](#-variables-de-entorno)
+- [Estructura del proyecto](#-estructura-del-proyecto)
+
+---
+
+## 🎮 Cómo se juega
+
+1. **Entra al arena** — Presiona "INICIAR COMBATE" en la pantalla principal.
+2. **Invoca** — Tienes **15 segundos** para escribir la descripción de tu arma, criatura o hechizo en cualquier idioma.
+3. **La IA actúa** — Gemini AI interpreta tu texto y genera estadísticas de `daño`, `defensa` y `elemento`.
+4. **Batalla** — Tu invocación se enfrenta a la de un enemigo aleatorio. El mayor poder neto gana.
+5. **5 rondas** — Se juegan 5 rondas seguidas. Al final se muestra tu puntuación total y estrellas obtenidas.
+
+> Si el tiempo se agota sin que escribas nada, el juego invoca automáticamente **"un guerrero sin armas"**.
+
+---
+
+## ⚔️ Sistema de combate
+
+### Cálculo de poder neto
+
+```
+Poder jugador = daño_jugador × multiplicador_elemento - defensa_enemigo × 0.4
+Poder enemigo = daño_enemigo × multiplicador_elemento - defensa_jugador × 0.4
+```
+
+- Si `poder_jugador > poder_enemigo` → **Victoria**
+- Si `poder_jugador < poder_enemigo` → **Derrota**
+- Si son iguales → **Empate**
+
+### Estadísticas de invocación
+
+| Tipo de invocación | Daño | Defensa |
+|---|---|---|
+| Arma / ataque puro | 65–90 | 10–35 |
+| Escudo / armadura | 10–35 | 65–90 |
+| Híbrido | 40–65 | 40–65 |
+
+Todos los valores se normalizan entre **0 y 100**.
+
+---
+
+## 🔥 Elementos y ventajas
+
+El elemento de tu invocación se determina automáticamente por las palabras clave que uses.
+
+```
+🔥 Fuego  →  vence a  ❄️ Hielo
+❄️ Hielo  →  vence a  ⚡ Rayo
+⚡ Rayo   →  vence a  🌍 Tierra
+🌍 Tierra →  vence a  💧 Agua
+💧 Agua   →  vence a  🌬️ Aire
+🌬️ Aire   →  vence a  🔥 Fuego
+```
+
+| Resultado | Multiplicador de daño |
+|---|---|
+| Elemento fuerte vs débil | × 1.3 |
+| Elemento neutro | × 1.0 |
+| Elemento débil vs fuerte | × 0.7 |
+
+### Palabras clave por elemento
+
+| Elemento | Ejemplos de palabras |
+|---|---|
+| 🔥 Fuego | fuego, llama, lava, dragón, volcán, incendio |
+| ❄️ Hielo | hielo, congelar, glacial, nieve, inmovilizar |
+| ⚡ Rayo | rayo, eléctrico, trueno, relámpago, tormenta |
+| 🌍 Tierra | roca, golem, terremoto, piedra, montaña |
+| 💧 Agua | agua, veneno, corrosivo, mar, ácido |
+| 🌬️ Aire | viento, tornado, sigilo, niebla, sombra |
+
+---
+
+## 🏆 Sistema de puntuación
+
+### Puntos por ronda
+
+```
+Victoria = 120 (base) + hasta 60 (margen) + (ronda - 1) × 15 (bonificación por ronda)
+Empate   = 60 puntos
+Derrota  = 0 puntos
+```
+
+- **Margen**: diferencia de poder entre jugador y enemigo, máximo +60 puntos.
+- **Bonificación por ronda**: las rondas tardías valen más. Ronda 5 da +60 extra.
+- **Máximo teórico por ronda**: 240 puntos (ronda 5, victoria con margen máximo).
+
+### Estrellas finales
+
+| Victorias | Estrellas |
+|---|---|
+| 5 | ⭐⭐⭐⭐⭐ |
+| 4 | ⭐⭐⭐⭐ |
+| 3 | ⭐⭐⭐ |
+| 2 | ⭐⭐ |
+| 0–1 | ⭐ |
+
+---
+
+## 🛠️ Stack tecnológico
+
+| Tecnología | Uso |
+|---|---|
+| **React 18** | Framework UI |
+| **TypeScript** | Tipado estático |
+| **Vite** | Bundler y dev server |
+| **TailwindCSS** | Estilos utilitarios |
+| **Framer Motion** | Animaciones e intro cinematográfica |
+| **tsParticles** | Fondo de partículas tipo red neuronal |
+| **Gemini AI (gemini-2.0-flash)** | Interpretación de invocaciones |
+| **Canvas API** | Renderizado procedural de criaturas |
+| **React Router v6** | Navegación entre páginas |
+
+---
+
+## 🚀 Instalación
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/tu-usuario/lightsquare.git
+cd lightsquare
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Configurar variables de entorno
+cp .env.example .env
+# Edita .env con tu API key de Gemini
+
+# 4. Iniciar el servidor de desarrollo
+npm run dev
+```
+
+### Scripts disponibles
+
+```bash
+npm run dev      # Servidor de desarrollo en localhost:5173
+npm run build    # Build de producción
+npm run preview  # Preview del build de producción
+npm run lint     # Linter ESLint
+```
+
+---
+
+## 🔑 Variables de entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```env
+VITE_GEMINI_API_KEY=tu_api_key_aqui
+```
+
+Obtén tu API key gratuita en [Google AI Studio](https://aistudio.google.com/apikey).
+
+> ⚠️ Nunca subas tu `.env` al repositorio. Ya está incluido en `.gitignore`.
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+lightsquare/
+├── src/
+│   ├── components/
+│   │   └── CreatureCanvas.tsx    # Renderizado procedural de criaturas con Canvas
+│   ├── hooks/
+│   │   └── useGameState.ts       # Estado global del juego
+│   ├── pages/
+│   │   ├── Home.tsx              # Intro animada (GlitchText, Particles, ScanLines)
+│   │   ├── Play.tsx              # Arena de combate principal
+│   │   ├── Settings.tsx          # Configuración
+│   │   └── NotFound.tsx          # Página 404
+│   ├── types/
+│   │   └── index.ts              # Interfaces TypeScript (Player, GameState, etc.)
+│   ├── utils/
+│   │   └── aiInterpreter.ts      # Integración con Gemini AI
+│   ├── App.tsx                   # Router principal
+│   └── main.tsx                  # Entry point
+├── .env                          # Variables de entorno (no subir)
+├── .env.example                  # Plantilla de variables
+├── package.json
+├── tailwind.config.js
+├── tsconfig.json
+└── vite.config.ts
+```
+
+---
+
+## 🎨 Criaturas procedurales
+
+Las criaturas se generan visualmente en tiempo real usando la **Canvas API**. No hay assets externos — cada criatura es única, determinada por un hash del texto de invocación más el elemento y las estadísticas. A mayor daño, la criatura se ve más agresiva; a mayor defensa, más robusta.
+
+---
+
+## 📄 Licencia
+
+MIT © lightSquare — Junio 2026
