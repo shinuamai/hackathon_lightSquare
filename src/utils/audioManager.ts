@@ -91,43 +91,64 @@ class AudioManager {
 
   // ── Background music ──────────────────────────────────────────────────────
 
-  /** Inicia música ambiental de batalla en loop */
+  /** Inicia música de batalla en loop (125 bpm, Am pentatónica) */
   startBgMusic() {
     if (this.bgIntervalId !== null) return
     this.init()
     if (!this.ctx || !this.master) return
 
-    // Drone grave continuo
+    // ── Drone grave continuo ─────────────────────────────────────────────────
     this.bgDroneOsc  = this.ctx.createOscillator()
     this.bgDroneGain = this.ctx.createGain()
-    this.bgDroneOsc.type = 'sine'
+    this.bgDroneOsc.type = 'triangle'
     this.bgDroneOsc.frequency.value = 55
-    this.bgDroneGain.gain.setValueAtTime(0.055, this.ctx.currentTime)
+    this.bgDroneGain.gain.setValueAtTime(0.09, this.ctx.currentTime)
     this.bgDroneOsc.connect(this.bgDroneGain)
     this.bgDroneGain.connect(this.master)
     this.bgDroneOsc.start()
 
-    // Pulso rítmico: escala pentatónica en Am
-    const pentatonic = [110, 130.81, 146.83, 164.81, 196, 220, 261.63, 293.66]
-    const pattern    = [0, 4, 2, 5, 1, 4, 3, 6, 0, 5, 2, 4, 1, 3, 5, 7]
+    // ── Patrón rítmico de 16 pasos ──────────────────────────────────────────
+    // Am pentatónica (A C D E G)
+    const mel  = [220, 261.63, 293.66, 329.63, 392, 440, 523.25, 587.33]
+    const bass = [110, 146.83, 164.81, 196, 220]
+
+    // Melodía: índice en mel, -1 = silencio
+    const melPat  = [0, -1, 4, 2, 1, -1, 3, 5, 0, -1, 4, 2, 3, -1, 5, 6]
+    // Bajo en pasos 0, 4, 8, 12
+    const bassPat = [0, -1, -1, -1, 2, -1, -1, -1, 0, -1, -1, -1, 1, -1, -1, -1]
+
     this.bgBeat = 0
 
+    // 16 corcheas a 125bpm → 240ms cada una
     this.bgIntervalId = setInterval(() => {
       if (!this.ctx || !this.master) return
-      const idx  = pattern[this.bgBeat % pattern.length]
-      const freq = pentatonic[idx % pentatonic.length]
-      // Nota melódica suave
-      this.osc(freq, 'sine', 0, 0.4, 0.032)
-      // Sub-nota octava baja cada 4 beats
-      if (this.bgBeat % 4 === 0) {
-        this.osc(freq / 2, 'triangle', 0, 0.55, 0.045)
+      const step = this.bgBeat % 16
+
+      // Melodía
+      const mi = melPat[step]
+      if (mi >= 0) this.osc(mel[mi], 'sine', 0, 0.22, 0.08)
+
+      // Bajo
+      const bi = bassPat[step]
+      if (bi >= 0) this.osc(bass[bi], 'triangle', 0, 0.38, 0.14)
+
+      // Hi-hat en cada corchea
+      this.noise(0, 0.04, 9000, 0.025)
+
+      // Snare en pasos 4 y 12 (beats 2 y 4)
+      if (step === 4 || step === 12) {
+        this.noise(0, 0.10, 1800, 0.06)
+        this.osc(185, 'sine', 0, 0.07, 0.07, 80)
       }
-      // Pulso de ruido tenue cada 8 beats (hi-hat)
-      if (this.bgBeat % 8 === 0) {
-        this.noise(0, 0.06, 6000, 0.018)
+
+      // Kick en pasos 0 y 8 (beats 1 y 3)
+      if (step === 0 || step === 8) {
+        this.osc(80, 'sine', 0, 0.18, 0.2, 30)
+        this.noise(0, 0.04, 300, 0.035)
       }
+
       this.bgBeat++
-    }, 480) // ~125 bpm
+    }, 240) // 240ms × 16 pasos = 3.84s por compás ≈ 125bpm
   }
 
   /** Detiene la música de batalla */

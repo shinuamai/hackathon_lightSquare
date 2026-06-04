@@ -186,15 +186,8 @@ export default function Play() {
   useEffect(() => { audio.setMuted(muted) },  [muted])
   useEffect(() => { audio.setVolume(volume) }, [volume])
 
-  // ── Background music ──
-  useEffect(() => {
-    if (phase === 'fighting') audio.startBgMusic()
-    if (phase === 'gameover') audio.stopBgMusic()
-  }, [phase])
-
-  useEffect(() => {
-    return () => { audio.stopBgMusic() } // cleanup on unmount
-  }, [])
+  // ── Cleanup on unmount ──
+  useEffect(() => { return () => { audio.stopBgMusic() } }, [])
 
   // ── Helpers ──
   const addLog = useCallback((text: string, color: string) => {
@@ -253,7 +246,7 @@ export default function Play() {
     const isLast = rNum >= TOTAL_ROUNDS
     setTimeout(() => {
       if (isLast) {
-        // Overall winner sound
+        audio.stopBgMusic()
         const p1W = newResults.filter(r=>r==='p1').length
         const p2W = newResults.filter(r=>r==='p2').length
         if (p1W > p2W)      audio.victory()
@@ -388,6 +381,8 @@ export default function Play() {
 
   // ── Restart ──────────────────────────────────────────────────────────────
   const restart = useCallback(() => {
+    audio.stopBgMusic()
+    audio.startBgMusic()
     setP1HP(MAX_HP); setP2HP(MAX_HP)
     setP1Powers(PRESET_POWERS); setP2Powers(PRESET_POWERS)
     setP1CDs([0,0,0,0]); setP2CDs([0,0,0,0])
@@ -405,6 +400,7 @@ export default function Play() {
   // ── Start game (from nameInput) ───────────────────────────────────────────
   const startGame = () => {
     audio.click()
+    audio.startBgMusic()
     roundEndedRef.current = false
     setPhase('fighting')
   }
