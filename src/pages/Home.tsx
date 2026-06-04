@@ -193,10 +193,10 @@ function Home() {
   const navigate = useNavigate()
 
   const steps = [
-    { icon: '⏱', title: '15 segundos para invocar', text: 'Escribe la descripción de tu arma o hechizo antes de que el tiempo se agote.' },
-    { icon: '🤖', title: 'La IA interpreta tu texto', text: 'Gemini AI asigna estadísticas de daño, defensa y elemento a tu invocación.' },
-    { icon: '⚔️', title: 'El mayor poder gana', text: 'Tu criatura se enfrenta a la del enemigo. Los números no mienten.' },
-    { icon: '🔥', title: 'Ventajas de elemento', text: 'Fuego > Hielo > Rayo > Tierra > Agua > Aire > Fuego. La estrategia importa.' },
+    { icon: '👥', title: 'Ingresa los nombres', text: 'Dos jugadores en un mismo teclado. P1 usa las teclas Q W E R T, P2 usa U I O P Y.' },
+    { icon: '⚔️', title: 'Dispara tus poderes', text: 'Cada tecla lanza un poder predefinido con daño, defensa y elemento únicos. Cooldown real.' },
+    { icon: '✨', title: 'Forja poderes personalizados', text: 'Escribe tu invocación en el input y Gemini AI la convierte en un poder exclusivo.' },
+    { icon: '🔥', title: 'Ventajas de elemento', text: 'Fuego > Hielo > Rayo > Tierra > Agua > Aire > Fuego. 5 rondas, el que más HP conserva gana.' },
   ]
 
   return (
@@ -295,7 +295,7 @@ function Home() {
         >
           <StatBadge label="Elementos" value="6" delay={2.8} />
           <StatBadge label="Rondas" value="5" delay={2.9} />
-          <StatBadge label="Combinaciones" value="∞" delay={3.0} />
+          <StatBadge label="Jugadores" value="2" delay={3.0} />
         </motion.div>
 
         {/* Scroll indicator */}

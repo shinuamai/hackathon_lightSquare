@@ -1,73 +1,87 @@
-# ⚡ lightSquare
+# ⚡ lightSquare — Prompt Arena
 
-> **Combate táctico de invocaciones potenciado por Gemini AI**
+> **Combate táctico 2 jugadores potenciado por Gemini AI**
 
-Escribe la descripción de tu arma o hechizo, la IA lo interpreta, le asigna estadísticas de combate y tu criatura se enfrenta a un enemigo en una batalla por elementos. 5 rondas. Un ganador.
+Dos jugadores en un mismo teclado. Dispara poderes, forja invocaciones con IA y destruye al rival en 5 rondas de combate en tiempo real.
 
 ---
 
 ## 📋 Índice
 
-- [Demo](#-demo)
 - [Cómo se juega](#-cómo-se-juega)
-- [Sistema de combate](#-sistema-de-combate)
+- [Controles](#-controles)
+- [Poderes y combate](#-poderes-y-combate)
 - [Elementos y ventajas](#-elementos-y-ventajas)
 - [Sistema de puntuación](#-sistema-de-puntuación)
 - [Stack tecnológico](#-stack-tecnológico)
 - [Instalación](#-instalación)
 - [Variables de entorno](#-variables-de-entorno)
-- [Estructura del proyecto](#-estructura-del-proyecto)
 
 ---
 
 ## 🎮 Cómo se juega
 
-1. **Entra al arena** — Presiona "INICIAR COMBATE" en la pantalla principal.
-2. **Invoca** — Tienes **15 segundos** para escribir la descripción de tu arma, criatura o hechizo en cualquier idioma.
-3. **La IA actúa** — Gemini AI interpreta tu texto y genera estadísticas de `daño`, `defensa` y `elemento`.
-4. **Batalla** — Tu invocación se enfrenta a la de un enemigo aleatorio. El mayor poder neto gana.
-5. **5 rondas** — Se juegan 5 rondas seguidas. Al final se muestra tu puntuación total y estrellas obtenidas.
-
-> Si el tiempo se agota sin que escribas nada, el juego invoca automáticamente **"un guerrero sin armas"**.
+1. **Ingresa los nombres** — Escribe los nombres de P1 y P2 y pulsa "INICIAR COMBATE".
+2. **Dispara poderes** — Cada jugador tiene 4 poderes predefinidos asignados a sus teclas. Úsalos estratégicamente respetando los cooldowns.
+3. **Forja poderes personalizados** — Escribe una descripción en el input inferior y Gemini AI la convierte en un 5.° poder único con estadísticas propias.
+4. **30 segundos por ronda** — Si el tiempo se agota, gana quien tenga más HP. Si empatan, es empate de ronda.
+5. **5 rondas** — Gana el jugador con más rondas ganadas al final. Se muestra puntuación, historial de rondas y pantalla de victoria/derrota épica.
 
 ---
 
-## ⚔️ Sistema de combate
+## 🕹️ Controles
 
-### Cálculo de poder neto
-
-```
-Poder jugador = daño_jugador × multiplicador_elemento - defensa_enemigo × 0.4
-Poder enemigo = daño_enemigo × multiplicador_elemento - defensa_jugador × 0.4
-```
-
-- Si `poder_jugador > poder_enemigo` → **Victoria**
-- Si `poder_jugador < poder_enemigo` → **Derrota**
-- Si son iguales → **Empate**
-
-### Estadísticas de invocación
-
-| Tipo de invocación | Daño | Defensa |
+| Acción | Jugador 1 | Jugador 2 |
 |---|---|---|
-| Arma / ataque puro | 65–90 | 10–35 |
-| Escudo / armadura | 10–35 | 65–90 |
-| Híbrido | 40–65 | 40–65 |
+| Poder 1 | `Q` | `U` |
+| Poder 2 | `W` | `I` |
+| Poder 3 | `E` | `O` |
+| Poder 4 | `R` | `P` |
+| Poder 5 (IA) | `T` | `Y` |
+| Forjar poder IA | Input inferior izquierdo | Input inferior derecho |
 
-Todos los valores se normalizan entre **0 y 100**.
+> **Nota:** Mientras escribas en el input de invocación, las teclas de poder quedan bloqueadas automáticamente.
+
+---
+
+## ⚔️ Poderes y combate
+
+### Poderes predefinidos
+
+| Poder | Elemento | Daño | Defensa | Cooldown |
+|---|---|---|---|---|
+| Kraken Abismal | 💧 Agua | 78 | 22 | 6s |
+| Rey Liche Eterno | 🌬️ Aire | 52 | 50 | 8s |
+| Archidemon del Viento | 🌬️ Aire | 90 | 10 | 5s |
+| Titán de Roca | 🌍 Tierra | 64 | 58 | 7s |
+
+### Fórmula de daño
+
+```
+daño_efectivo = daño_poder × multiplicador_elemento × 0.65
+```
+
+El daño se resta directamente del HP del rival (máx 100 HP). Llegar a 0 HP termina la ronda.
+
+### Poderes personalizados (IA)
+
+Al escribir una invocación en el input, Gemini AI la interpreta y genera:
+- **Daño**: 0–95 (boosted ×1.35 sobre lo que devuelve la IA)
+- **Defensa**: 0–80 (boosted ×1.2)
+- **Elemento**: detectado por palabras clave del texto
+- **Cooldown**: 6s fijo
 
 ---
 
 ## 🔥 Elementos y ventajas
 
-El elemento de tu invocación se determina automáticamente por las palabras clave que uses.
-
 ```
-🔥 Fuego  →  vence a  ❄️ Hielo
-❄️ Hielo  →  vence a  ⚡ Rayo
-⚡ Rayo   →  vence a  🌍 Tierra
-🌍 Tierra →  vence a  💧 Agua
-💧 Agua   →  vence a  🌬️ Aire
-🌬️ Aire   →  vence a  🔥 Fuego
+🔥 Fuego   →  vence a  ❄️ Hielo
+❄️ Hielo   →  vence a  ⚡ Rayo
+⚡ Rayo    →  vence a  🌍 Tierra
+🌍 Tierra  →  vence a  💧 Agua
+💧 Agua    →  vence a  🌬️ Aire
+🌬️ Aire    →  vence a  🔥 Fuego
 ```
 
 | Resultado | Multiplicador de daño |
@@ -78,7 +92,7 @@ El elemento de tu invocación se determina automáticamente por las palabras cla
 
 ### Palabras clave por elemento
 
-| Elemento | Ejemplos de palabras |
+| Elemento | Ejemplos |
 |---|---|
 | 🔥 Fuego | fuego, llama, lava, dragón, volcán, incendio |
 | ❄️ Hielo | hielo, congelar, glacial, nieve, inmovilizar |
@@ -91,27 +105,15 @@ El elemento de tu invocación se determina automáticamente por las palabras cla
 
 ## 🏆 Sistema de puntuación
 
-### Puntos por ronda
-
 ```
-Victoria = 120 (base) + hasta 60 (margen) + (ronda - 1) × 15 (bonificación por ronda)
-Empate   = 60 puntos
-Derrota  = 0 puntos
+Victoria de ronda = 120 (base) + HP_ganador × 0.5 + ronda × 10
+Empate de ronda   = 60 pts cada jugador
+Derrota de ronda  = 0 pts
 ```
 
-- **Margen**: diferencia de poder entre jugador y enemigo, máximo +60 puntos.
-- **Bonificación por ronda**: las rondas tardías valen más. Ronda 5 da +60 extra.
-- **Máximo teórico por ronda**: 240 puntos (ronda 5, victoria con margen máximo).
-
-### Estrellas finales
-
-| Victorias | Estrellas |
-|---|---|
-| 5 | ⭐⭐⭐⭐⭐ |
-| 4 | ⭐⭐⭐⭐ |
-| 3 | ⭐⭐⭐ |
-| 2 | ⭐⭐ |
-| 0–1 | ⭐ |
+- **HP restante** aporta hasta +50 puntos extra.
+- **Bonus por ronda tardía**: la ronda 5 vale +50 más que la ronda 1.
+- La pantalla de Game Over muestra: rondas ganadas, puntuación total y resultado de cada ronda.
 
 ---
 
@@ -123,10 +125,11 @@ Derrota  = 0 puntos
 | **TypeScript** | Tipado estático |
 | **Vite** | Bundler y dev server |
 | **TailwindCSS** | Estilos utilitarios |
-| **Framer Motion** | Animaciones e intro cinematográfica |
-| **tsParticles** | Fondo de partículas tipo red neuronal |
-| **Gemini AI (gemini-2.0-flash)** | Interpretación de invocaciones |
-| **Canvas API** | Renderizado procedural de criaturas |
+| **Framer Motion** | Animaciones en la intro (Home) |
+| **tsParticles** | Fondo de partículas tipo red neuronal (Home) |
+| **Gemini AI (gemini-2.0-flash)** | Interpretación de invocaciones personalizadas |
+| **Canvas API** | Renderizado procedural de criaturas por elemento |
+| **Web Audio API** | Efectos de sonido y música de batalla sintetizada |
 | **React Router v6** | Navegación entre páginas |
 
 ---
@@ -143,7 +146,7 @@ npm install
 
 # 3. Configurar variables de entorno
 cp .env.example .env
-# Edita .env con tu API key de Gemini
+# Edita .env y pega tu API key de Gemini
 
 # 4. Iniciar el servidor de desarrollo
 npm run dev
@@ -180,22 +183,18 @@ Obtén tu API key gratuita en [Google AI Studio](https://aistudio.google.com/api
 lightsquare/
 ├── src/
 │   ├── components/
-│   │   └── CreatureCanvas.tsx    # Renderizado procedural de criaturas con Canvas
-│   ├── hooks/
-│   │   └── useGameState.ts       # Estado global del juego
+│   │   └── CreatureCanvas.tsx    # Criaturas procedurales por elemento y stats
 │   ├── pages/
 │   │   ├── Home.tsx              # Intro animada (GlitchText, Particles, ScanLines)
-│   │   ├── Play.tsx              # Arena de combate principal
-│   │   ├── Settings.tsx          # Configuración
-│   │   └── NotFound.tsx          # Página 404
-│   ├── types/
-│   │   └── index.ts              # Interfaces TypeScript (Player, GameState, etc.)
+│   │   └── Play.tsx              # Arena de combate 2 jugadores
 │   ├── utils/
-│   │   └── aiInterpreter.ts      # Integración con Gemini AI
-│   ├── App.tsx                   # Router principal
-│   └── main.tsx                  # Entry point
+│   │   ├── aiInterpreter.ts      # Integración con Gemini AI
+│   │   └── audioManager.ts       # Motor de sonido Web Audio API (efectos + música)
+│   ├── types/
+│   │   └── index.ts              # Tipos TypeScript globales
+│   ├── App.tsx
+│   └── main.tsx
 ├── .env                          # Variables de entorno (no subir)
-├── .env.example                  # Plantilla de variables
 ├── package.json
 ├── tailwind.config.js
 ├── tsconfig.json
@@ -206,10 +205,18 @@ lightsquare/
 
 ## 🎨 Criaturas procedurales
 
-Las criaturas se generan visualmente en tiempo real usando la **Canvas API**. No hay assets externos — cada criatura es única, determinada por un hash del texto de invocación más el elemento y las estadísticas. A mayor daño, la criatura se ve más agresiva; a mayor defensa, más robusta.
+Las criaturas se generan en tiempo real con la **Canvas API**. No hay assets externos — cada criatura es única, determinada por el elemento activo del jugador. A mayor daño, la criatura se ve más agresiva; a mayor defensa, más robusta. Cambian visualmente conforme el jugador usa diferentes poderes.
 
 ---
 
-## 📄 Licencia
+## 🎵 Audio sintetizado
+
+Todo el audio del juego está generado en tiempo real con la **Web Audio API** — sin archivos de sonido. Incluye:
+- Efectos por acción: clic, impacto de poder, invocación de magia
+- Resultados: victoria de ronda, derrota, empate
+- Game over: fanfarria épica de victoria o caída cromática de derrota
+- **Música de batalla ambiental**: drone grave + arpegio pentatónico en loop durante el combate
+
+---
 
 MIT © lightSquare — Junio 2026

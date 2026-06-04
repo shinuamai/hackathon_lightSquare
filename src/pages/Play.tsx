@@ -59,7 +59,8 @@ function HPBar({ hp, flip, name }: { hp: number; flip?: boolean; name: string })
   return (
     <div className={`flex flex-col gap-0.5 ${flip ? 'items-end' : ''}`}>
       <div className={`flex items-center gap-2 ${flip ? 'flex-row-reverse' : ''}`}>
-        <span className={`text-xs font-black tracking-wide ${flip ? 'text-red-300' : 'text-purple-300'}`}>{name}</span>
+        <span className={`text-xs font-black tracking-wide uppercase`}
+          style={{ fontFamily:"'Courier New',monospace", color: flip ? '#f87171' : '#22d3ee' }}>{name}</span>
         <span className={`text-sm font-black tabular-nums ${pct < 25 ? 'text-red-400 animate-pulse' : 'text-white'}`}>
           {hp}/{MAX_HP}
         </span>
@@ -184,6 +185,16 @@ export default function Play() {
   // ── Audio sync ──
   useEffect(() => { audio.setMuted(muted) },  [muted])
   useEffect(() => { audio.setVolume(volume) }, [volume])
+
+  // ── Background music ──
+  useEffect(() => {
+    if (phase === 'fighting') audio.startBgMusic()
+    if (phase === 'gameover') audio.stopBgMusic()
+  }, [phase])
+
+  useEffect(() => {
+    return () => { audio.stopBgMusic() } // cleanup on unmount
+  }, [])
 
   // ── Helpers ──
   const addLog = useCallback((text: string, color: string) => {
@@ -407,12 +418,13 @@ export default function Play() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="h-screen bg-gray-950 text-white overflow-hidden flex flex-col relative">
+    <div className="h-screen text-white overflow-hidden flex flex-col relative" style={{ background: '#030712' }}>
 
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-purple-950 to-gray-950 pointer-events-none" />
-      <div className="absolute inset-0 opacity-10 pointer-events-none"
-        style={{ backgroundImage:'linear-gradient(#fff2 1px,transparent 1px),linear-gradient(90deg,#fff2 1px,transparent 1px)', backgroundSize:'48px 48px' }} />
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6,182,212,0.08) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168,85,247,0.08) 0%, transparent 70%)' }} />
+      <div className="absolute inset-0 opacity-100 pointer-events-none"
+        style={{ backgroundImage:'linear-gradient(rgba(6,182,212,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.05) 1px,transparent 1px)', backgroundSize:'60px 60px' }} />
 
       {/* Hit flashes */}
       {hitSide==='p1' && <div className="absolute left-0 inset-y-0 w-1/2 bg-red-500/25 z-20 pointer-events-none" />}
@@ -431,47 +443,59 @@ export default function Play() {
 
       {/* ═══════════════ NAME INPUT MODAL ═══════════════ */}
       {phase === 'nameInput' && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-b from-indigo-950 via-purple-950 to-gray-950">
-          <div className="bg-gray-900/90 border border-purple-500/40 rounded-2xl p-8 flex flex-col gap-5 w-full max-w-md backdrop-blur-sm shadow-2xl shadow-purple-950">
+        <div className="absolute inset-0 z-50 flex items-center justify-center" style={{ background: '#030712' }}>
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ backgroundImage:'linear-gradient(rgba(6,182,212,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.05) 1px,transparent 1px)', backgroundSize:'60px 60px' }} />
+          <div className="relative bg-white/5 border border-cyan-500/30 rounded-2xl p-8 flex flex-col gap-5 w-full max-w-md backdrop-blur-sm shadow-2xl">
             <div className="text-center">
-              <h1 className="text-4xl font-black text-purple-300 mb-1" style={{ textShadow:'0 0 20px #7c3aed' }}>
-                ⚔️ PROMPT ARENA
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs uppercase tracking-widest mb-3"
+                style={{ fontFamily:"'Courier New',monospace" }}>
+                ● PROMPT ARENA
+              </div>
+              <h1 className="text-4xl font-black text-white mb-1 uppercase tracking-wider"
+                style={{ fontFamily:"'Courier New',monospace", textShadow:'0 0 30px rgba(6,182,212,0.4)' }}>
+                ⚔ COMBAT
               </h1>
-              <p className="text-gray-400 text-sm">2 Jugadores · {TOTAL_ROUNDS} Rondas · Combate en tiempo real</p>
+              <p className="text-gray-500 text-sm" style={{ fontFamily:"'Courier New',monospace" }}>
+                2 JUGADORES · {TOTAL_ROUNDS} RONDAS · TIEMPO REAL
+              </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-purple-300 text-sm font-bold block mb-1.5">
-                  🎮 Jugador 1 <span className="text-gray-500 font-normal text-xs ml-1">teclas Q W E R T</span>
+                <label className="text-cyan-400 text-xs font-bold block mb-1.5 uppercase tracking-widest"
+                  style={{ fontFamily:"'Courier New',monospace" }}>
+                  P1_NAME <span className="text-gray-600 font-normal ml-1">[ Q W E R T ]</span>
                 </label>
                 <input type="text" value={p1Name}
                   onChange={e => setP1Name(e.target.value || 'Jugador 1')}
                   placeholder="Jugador 1" maxLength={20}
-                  className="w-full px-4 py-3 bg-black/40 border border-purple-500/40 rounded-xl
-                    focus:outline-none focus:ring-2 focus:ring-purple-500 text-white text-lg font-bold" />
+                  className="w-full px-4 py-3 bg-black/40 border border-cyan-500/30 rounded-xl
+                    focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white text-lg font-bold" />
               </div>
               <div>
-                <label className="text-red-300 text-sm font-bold block mb-1.5">
-                  🎮 Jugador 2 <span className="text-gray-500 font-normal text-xs ml-1">teclas U I O P Y</span>
+                <label className="text-pink-400 text-xs font-bold block mb-1.5 uppercase tracking-widest"
+                  style={{ fontFamily:"'Courier New',monospace" }}>
+                  P2_NAME <span className="text-gray-600 font-normal ml-1">[ U I O P Y ]</span>
                 </label>
                 <input type="text" value={p2Name}
                   onChange={e => setP2Name(e.target.value || 'Jugador 2')}
                   placeholder="Jugador 2" maxLength={20}
-                  className="w-full px-4 py-3 bg-black/40 border border-red-500/40 rounded-xl
-                    focus:outline-none focus:ring-2 focus:ring-red-500 text-white text-lg font-bold" />
+                  className="w-full px-4 py-3 bg-black/40 border border-pink-500/30 rounded-xl
+                    focus:outline-none focus:ring-2 focus:ring-pink-500 text-white text-lg font-bold" />
               </div>
             </div>
 
             <button onClick={startGame}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-black text-xl
-                hover:from-purple-500 hover:to-pink-500 active:scale-95 transition-all shadow-lg shadow-purple-950">
-              ⚔️ Comenzar Partida
+              className="w-full py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-black text-xl
+                hover:from-cyan-400 hover:to-purple-500 active:scale-95 transition-all uppercase tracking-widest"
+              style={{ fontFamily:"'Courier New',monospace", boxShadow:'0 0 30px rgba(6,182,212,0.3)' }}>
+              ⚔ INICIAR COMBATE
             </button>
 
-            <div className="text-xs text-gray-600 text-center space-y-1">
-              <p>Cada jugador usa su mitad del teclado para disparar poderes</p>
-              <p>Cuando escribas en el campo de texto, tus teclas no disparan poderes</p>
+            <div className="text-xs text-gray-600 text-center space-y-1" style={{ fontFamily:"'Courier New',monospace" }}>
+              <p>// Cada jugador controla su mitad del teclado</p>
+              <p>// Al escribir en el input, las teclas no disparan poderes</p>
             </div>
           </div>
         </div>
@@ -480,10 +504,12 @@ export default function Play() {
       {/* ═══════════════ PAUSE OVERLAY ═══════════════ */}
       {isPaused && phase !== 'nameInput' && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
-          <div className="bg-gray-900 border border-purple-500/40 rounded-2xl p-8 flex flex-col gap-4 min-w-[270px]">
-            <h2 className="text-2xl font-black text-center text-purple-300">⏸ PAUSA</h2>
+          <div className="bg-white/5 border border-cyan-500/30 rounded-2xl p-8 flex flex-col gap-4 min-w-[270px]">
+            <h2 className="text-2xl font-black text-center text-cyan-400 uppercase tracking-widest"
+              style={{ fontFamily:"'Courier New',monospace" }}>⏸ PAUSA</h2>
             <button onClick={() => { audio.click(); setIsPaused(false) }}
-              className="py-3 px-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-lg active:scale-95 transition-all">
+              className="py-3 px-6 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold text-lg active:scale-95 transition-all uppercase tracking-widest"
+              style={{ fontFamily:"'Courier New',monospace" }}>
               ▶ Continuar
             </button>
             <button onClick={() => { audio.click(); restart() }}
@@ -583,9 +609,10 @@ export default function Play() {
 
             <div className="flex gap-4 w-full">
               <button onClick={() => { audio.click(); restart() }}
-                className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-lg
-                  hover:from-purple-500 hover:to-pink-500 active:scale-95 transition-all">
-                🔄 Revanche
+                className="flex-1 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold text-lg
+                  hover:from-cyan-400 hover:to-purple-500 active:scale-95 transition-all uppercase tracking-widest"
+                style={{ fontFamily:"'Courier New',monospace", boxShadow:'0 0 20px rgba(6,182,212,0.25)' }}>
+                🔄 REVANCHE
               </button>
               <button onClick={() => { audio.click(); setPhase('nameInput'); setP1Name('Jugador 1'); setP2Name('Jugador 2') }}
                 className="px-6 py-4 bg-white/10 border border-white/20 rounded-xl font-semibold hover:bg-white/20 transition-all active:scale-95">
@@ -607,10 +634,12 @@ export default function Play() {
           {/* Header */}
           <div className="flex items-center justify-between mb-2 shrink-0">
             <button onClick={() => { audio.click(); navigate('/') }}
-              className="text-gray-400 hover:text-white text-sm transition-colors">← Inicio</button>
+              className="text-cyan-600 hover:text-cyan-400 text-sm transition-colors"
+              style={{ fontFamily:"'Courier New',monospace" }}>← INICIO</button>
 
             <div className="flex flex-col items-center gap-1">
-              <span className="text-purple-300 font-black tracking-widest text-sm">PROMPT ARENA</span>
+              <span className="text-cyan-400 font-black tracking-widest text-sm"
+              style={{ fontFamily:"'Courier New',monospace" }}>PROMPT ARENA</span>
               <div className="flex items-center gap-3">
                 <RoundDots results={roundResults} total={TOTAL_ROUNDS} />
                 <span className="text-xs text-gray-500">Ronda {round}/{TOTAL_ROUNDS}</span>

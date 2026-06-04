@@ -6,6 +6,12 @@ class AudioManager {
   private _volume = 0.55
   private _muted = false
 
+  // ── Background music state ─────────────────────────────────────────────────
+  private bgIntervalId: ReturnType<typeof setInterval> | null = null
+  private bgDroneOsc: OscillatorNode | null = null
+  private bgDroneGain: GainNode | null = null
+  private bgBeat = 0
+
   // ── Init (lazy, requires user gesture) ───────────────────────────────────
   private init() {
     if (!this.ctx) {
@@ -81,6 +87,64 @@ class AudioManager {
     gain.connect(this.master)
     src.start(t0)
     src.stop(t0 + duration + 0.02)
+  }
+
+  // ── Background music ──────────────────────────────────────────────────────
+
+  /** Inicia música ambiental de batalla en loop */
+  startBgMusic() {
+    if (this.bgIntervalId !== null) return
+    this.init()
+    if (!this.ctx || !this.master) return
+
+    // Drone grave continuo
+    this.bgDroneOsc  = this.ctx.createOscillator()
+    this.bgDroneGain = this.ctx.createGain()
+    this.bgDroneOsc.type = 'sine'
+    this.bgDroneOsc.frequency.value = 55
+    this.bgDroneGain.gain.setValueAtTime(0.055, this.ctx.currentTime)
+    this.bgDroneOsc.connect(this.bgDroneGain)
+    this.bgDroneGain.connect(this.master)
+    this.bgDroneOsc.start()
+
+    // Pulso rítmico: escala pentatónica en Am
+    const pentatonic = [110, 130.81, 146.83, 164.81, 196, 220, 261.63, 293.66]
+    const pattern    = [0, 4, 2, 5, 1, 4, 3, 6, 0, 5, 2, 4, 1, 3, 5, 7]
+    this.bgBeat = 0
+
+    this.bgIntervalId = setInterval(() => {
+      if (!this.ctx || !this.master) return
+      const idx  = pattern[this.bgBeat % pattern.length]
+      const freq = pentatonic[idx % pentatonic.length]
+      // Nota melódica suave
+      this.osc(freq, 'sine', 0, 0.4, 0.032)
+      // Sub-nota octava baja cada 4 beats
+      if (this.bgBeat % 4 === 0) {
+        this.osc(freq / 2, 'triangle', 0, 0.55, 0.045)
+      }
+      // Pulso de ruido tenue cada 8 beats (hi-hat)
+      if (this.bgBeat % 8 === 0) {
+        this.noise(0, 0.06, 6000, 0.018)
+      }
+      this.bgBeat++
+    }, 480) // ~125 bpm
+  }
+
+  /** Detiene la música de batalla */
+  stopBgMusic() {
+    if (this.bgIntervalId !== null) {
+      clearInterval(this.bgIntervalId)
+      this.bgIntervalId = null
+    }
+    if (this.bgDroneOsc) {
+      try { this.bgDroneOsc.stop() } catch { /* already stopped */ }
+      this.bgDroneOsc = null
+    }
+    if (this.bgDroneGain) {
+      this.bgDroneGain.disconnect()
+      this.bgDroneGain = null
+    }
+    this.bgBeat = 0
   }
 
   // ── Sounds ────────────────────────────────────────────────────────────────
