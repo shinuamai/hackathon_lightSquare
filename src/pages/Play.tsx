@@ -32,16 +32,16 @@ interface Power {
   cooldown: number
 }
 const PRESET_POWERS: Power[] = [
-  { id:'kraken', name:'Kraken Abismal',      cooldown:6,
+  { id:'kraken', name:'Kraken Abismal',      cooldown:2,
     description:'Tentáculos colosales que emergen del abismo y aplastan con presión devastadora',
     stats:{ damage:78, defense:22, element:'water' } },
-  { id:'lich',   name:'Rey Liche Eterno',    cooldown:8,
+  { id:'lich',   name:'Rey Liche Eterno',    cooldown:2,
     description:'Drenaje vital absoluto que convierte la vida robada en escudos de hueso',
     stats:{ damage:52, defense:50, element:'air' } },
-  { id:'demon',  name:'Archidemon del Viento', cooldown:5,
+  { id:'demon',  name:'Archidemon del Viento', cooldown:2,
     description:'Cuchillas invisibles supersónicas que perforan toda armadura sin piedad',
     stats:{ damage:90, defense:10, element:'air' } },
-  { id:'golem',  name:'Titán de Roca',       cooldown:7,
+  { id:'golem',  name:'Titán de Roca',       cooldown:2,
     description:'Coloso granítico que convierte cada golpe en un terremoto continental',
     stats:{ damage:64, defense:58, element:'earth' } },
 ]
