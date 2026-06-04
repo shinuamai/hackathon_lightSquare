@@ -232,7 +232,7 @@ function Home() {
           style={{ fontFamily: "'Courier New', monospace" }}
         >
           <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>●</motion.span>
-          POWERED BY GEMINI AI
+          POWERED BY DEVIN AI
         </motion.div>
 
         {/* Main title */}
@@ -355,7 +355,7 @@ function Home() {
         className="relative z-20 text-center py-8 text-gray-700 text-xs border-t border-white/5"
         style={{ fontFamily: "'Courier New', monospace" }}
       >
-        LIGHTSQUARE_v1.0 // POWERED BY GEMINI AI // {new Date().getFullYear()}
+        LIGHTSQUARE_v1.0 // POWERED BY DEVIN AI // {new Date().getFullYear()}
       </motion.footer>
     </div>
     </ParticlesProvider>

@@ -608,7 +608,7 @@ export default function Play() {
                 className="flex-1 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold text-lg
                   hover:from-cyan-400 hover:to-purple-500 active:scale-95 transition-all uppercase tracking-widest"
                 style={{ fontFamily:"'Courier New',monospace", boxShadow:'0 0 20px rgba(6,182,212,0.25)' }}>
-                🔄 REVANCHE
+                🔄 Revancha
               </button>
               <button onClick={() => { audio.click(); setPhase('nameInput'); setP1Name('Jugador 1'); setP2Name('Jugador 2') }}
                 className="px-6 py-4 bg-white/10 border border-white/20 rounded-xl font-semibold hover:bg-white/20 transition-all active:scale-95">
