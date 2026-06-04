@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E '\\\\.\\(json|ts|tsx\\)$')",
+      "Bash(ls -la d:/Applications/hackathon_lightSquare/.env* d:/Applications/hackathon_lightSquare/.gitignore)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
